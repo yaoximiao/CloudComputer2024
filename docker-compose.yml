@@ -1,0 +1,23 @@
+services:
+  backend:
+    image: ghcr.io/yaoximiao/chatnote_backend:latest 
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend:/app
+    environment:
+      - OPENAI_API_KEY=/app/api-key.src
+    command: python app.py
+
+  frontend:
+    image: ghcr.io/yaoximiao/chatnote_frontend:latest
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules 
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - backend
+    command: sh -c "npm install && npm run serve"
